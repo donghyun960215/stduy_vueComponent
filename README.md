@@ -224,3 +224,160 @@ App.vue 파일에서 class 와 style 를 추가를 하면 MyBtn의 div의 상속
 만약 따로 넣고 싶은게 없고 그냥 전부다 넣고 싶다면.
 v-bind = "$attrs"를 입력해서 사용한다.
 ```
+
+## Emit
+```html
+<!-- App.vus -->
+<template>
+  <MyBtn @click="log">
+    Banana
+  </MyBtn>
+</template>
+
+<script>
+import MyBtn from '~/components/MyBtn'
+
+export default {
+  components: {
+    MyBtn
+  },
+  methods: {
+    log(event) {
+      console.log('Click!!')
+      console.log(event)
+    }
+  }
+}
+</script>
+<!-- ////////////////////// -->
+<!-- /components/MyBtn.vue -->
+<template>
+  <div class="btn">
+    <slot></slot>
+  </div>
+  <h1 @click="$emit('click', 123)">
+    ABC
+  </h1>
+</template>
+
+<script>
+export default {
+  emits: [
+    'click'
+  ]
+}
+</script>
+
+<style scoped lang="scss">
+  .btn {
+    display: inline-block;
+    margin: 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+```
+```plaintext
+상속관계에 있어 click이벤트가 최상위요소를 못찾아 동작을 안할 때 사용한다.
+일반적인 속성이 아니고 이벤트를 받아서 사용한다.
+
+이벤트가 동작 됐을 때 활용할 수 있는 이벤트 객체로는 MyBtn에서 매개변수로 넘겨줄 
+데이터를 작성을 하면 App.vue애서 그 매개변수를 받아 활용을 한다.
+```
+
+## Solt
+### Fallback contents(대체)
+```html
+<!-- App.vus -->
+<template>
+  <MyBtn>
+  </MyBtn>
+</template>
+
+<script>
+import MyBtn from '~/components/MyBtn'
+
+export default {
+  components: {
+    MyBtn
+  }
+}
+</script>
+<!-- ////////////////////// -->
+<!-- /components/MyBtn.vue -->
+<template>
+  <div class="btn">
+    <slot>Apple</slot>
+  </div>
+</template>
+
+<style scoped lang="scss">
+  .btn {
+    display: inline-block;
+    margin: 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+```
+```plaintext
+만약 <MyBtn></MyBtn> 부분에 데이터가 없으면 <slot></slot>부분에 데이터를 입력해서
+보완을 해줄 수 있다 그리고 <MyBtn></MyBtn>다시 입력을 하면 내용이 덮어져서 나온다.
+```
+### Named Slots(이름을 갖는 슬롯)
+```html
+<!-- App.vus -->
+<template>
+  <MyBtn>
+    <template #text>
+      <span>Banana</span>
+    </template>
+    <template #icon>
+      <span>(B)</span>
+    </template>
+  </MyBtn>
+</template>
+
+<script>
+import MyBtn from '~/components/MyBtn'
+
+export default {
+  components: {
+    MyBtn
+  }
+}
+</script>
+<!-- ////////////////////// -->
+<!-- /components/MyBtn.vue -->
+<template>
+  <div class="btn">
+    <slot name="icon"></slot>
+    <slot name="text"></slot>
+  </div>
+</template>
+
+<style scoped lang="scss">
+  .btn {
+    display: inline-block;
+    margin: 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+```
+```plaintext
+일반적으로 slot에 작성을 하면 작성을 한 순서대로 입력이 진행이된다.
+하지만 순서를 주고 싶을 때는 위와 같이 사용을 하면된다.
+template에 v-sloe: 지정이름 과 같이 추가를 해준다. 그러면 자동으로 #지정이름으로 변환이 된다.
+App.vue 부분에서 순서가 뒤 바껴도 MyBtn에서 지정한 순서가 바뀌지 않는 이상 
+지정한 순서에 맞게 작성이된다.
+```

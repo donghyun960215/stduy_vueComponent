@@ -1,18 +1,9 @@
 <template>
-  <div 
-    class="btn">
-    <slot></slot>
+  <div class="btn">
+    <slot name="icon"></slot>
+    <slot name="text"></slot>
   </div>
-  <h1
-    :class="$attrs.class"
-    :style="$attrs.style"></h1>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>
 
 <style scoped lang="scss">
   .btn {

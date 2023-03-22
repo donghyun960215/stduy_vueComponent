@@ -1,8 +1,11 @@
 <template>
-  <MyBtn
-    class="dong"
-    style="color: red">
-    Banana
+  <MyBtn>
+    <template #text>
+      <span>Banana</span>
+    </template>
+    <template #icon>
+      <span>(B)</span>
+    </template>
   </MyBtn>
 </template>
 
