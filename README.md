@@ -381,3 +381,115 @@ template에 v-sloe: 지정이름 과 같이 추가를 해준다. 그러면 자�
 App.vue 부분에서 순서가 뒤 바껴도 MyBtn에서 지정한 순서가 바뀌지 않는 이상 
 지정한 순서에 맞게 작성이된다.
 ```
+
+## Provide, Inject
+```html
+<!-- App.vus -->
+<template>
+  <button @click="message = 'Good?'">
+    Click!
+  </button>
+  <h1>App : {{ message }}</h1>
+  <Parent />
+</template>
+
+<script>
+import Parent from '~/components/Parent'
+import { computed } from 'vue'
+
+export default {
+  components: {
+    Parent
+  },
+  data() {
+    return {
+      message: 'Hello World'
+    }
+  },
+  provide() {
+    return {
+      msg: computed(() => {
+        return this.message
+      })
+    }
+  }
+}
+</script>
+<!-- ////////////////////// -->
+<!-- /components/Parent.vue -->
+<template>
+  <Child />
+</template>
+
+<script>
+import Child from '~/components/Child'
+
+export default {
+  components: {
+    Child
+  }
+}
+</script>
+<!-- ////////////////////// -->
+<!-- /components/Child.vue -->
+<template>
+  <div>
+    Child : {{ msg }}
+  </div>
+</template>
+
+<script>
+export default {
+  inject: ['msg']
+}
+</script>
+```
+```plaintext
+조상컴포넌트에서 자식컴포넌트로 내려줄 때는 props 사용
+자식컴포넌트에서 후손컴포넌트로 내려줄 때는 props 사용
+바로 아래에 있는 자식 컴포턴트한테만 데이터를 내려 줄 수 있다.
+조상에서 후손 컴포넌트로 데이터를 내려 줄 수 없다. 그래서 그 때 사용하는게 parent,inject 이다.
+하지만 그러면 반응성 기능이 사라지게 된다. 그걸 보완을 하려면 computed 를 가지고 와서
+사용을 하면된다.
+```
+
+## Refs
+```html
+<template>
+  <h1 id="hello">
+    Hello world
+  </h1>
+</template>
+
+<script>
+export default {
+  mounted() {
+    const h1El = document.querySelector('#hello')
+    console.log(h1El.textContent)
+  }
+}
+</script>
+```
+```plaintext
+기존의 요소를 가져오기 위해서는 위와 같은 방법으로 가져와서 사용을 했다.
+```
+```html
+<template>
+  <h1 ref="hello">
+    Hello world
+  </h1>
+</template>
+
+<script>
+export default {
+  mounted() {
+    console.log(this.$refs.hello.textContent)
+  }
+}
+</script>
+```
+```plaintext
+vue.js 에서 제공하는 ref를 사용하면 위와 같이 간단하게 사용이 가능하다.
+한가지 주의해야할 부분은 컴포넌트가 html과 연결이된 직후에만 사용을 할 수 있다.
+created()라이프사이클에서는 사용이 불가능 하다.
+```

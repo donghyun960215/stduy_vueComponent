@@ -1,20 +1,17 @@
 <template>
-  <MyBtn>
-    <template #text>
-      <span>Banana</span>
-    </template>
-    <template #icon>
-      <span>(B)</span>
-    </template>
-  </MyBtn>
+  <Hello ref="hello" />
 </template>
 
 <script>
-import MyBtn from '~/components/MyBtn'
+import Hello from '~/components/Hello'
 
 export default {
   components: {
-    MyBtn
+    Hello
+  },
+  
+  mounted() {
+    console.log(this.$refs.hello.$refs.good)
   }
 }
 </script>
